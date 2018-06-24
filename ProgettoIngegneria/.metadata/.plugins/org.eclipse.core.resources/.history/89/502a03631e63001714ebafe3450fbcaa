@@ -1,0 +1,382 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.swing.*;
+
+public class HomePage extends JFrame {
+	
+	public static void main(String[] args) throws SQLException {
+		HomePage homePage = new HomePage();
+//		ProdottoPage prodottoPage = new ProdottoPage();
+//		Ordine ordine = new Ordine();
+//		GestioneNegozio gestioneNegozio = new GestioneNegozio();
+//		AggiungiProdotto aggiungiProdotto = new AggiungiProdotto();
+//		AggiungiMusicista aggiungiMusicista = new AggiungiMusicista();
+		// Notifica 
+//		JOptionPane.showMessageDialog(null, "Prodotti con meno di 2 pezzi disponibili:\n\n1- Titolo: Title1\n2- Titolo: Title2", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+	}
+	private Accedi accedi = new Accedi(this);
+	private CarrelloPage carrelloPage = new CarrelloPage(this);
+	private Registrati registrati = new Registrati(this);
+	private ProdottoPage prodottoPage = new ProdottoPage(0);
+	private GestioneNegozio gestioneNegozio = new GestioneNegozio();
+//	Registrati registrati = new Registrati();
+//	ProdottoPage prodottoPage = new ProdottoPage();
+//	Ordine ordine = new Ordine();
+//	GestioneNegozio gestioneNegozio = new GestioneNegozio();
+//	AggiungiProdotto aggiungiProdotto = new AggiungiProdotto();
+//	AggiungiMusicista aggiungiMusicista = new AggiungiMusicista();
+
+	private static final String titolo = "Home Page";
+	private static final int larghezza = 1300, altezza = 900;
+
+	private static Cliente cliente = new Cliente();
+	private static final Catalogo catalogo = new Catalogo();
+	private static Carrello carrello = new Carrello("a");
+	
+	// Pannello Nord
+	private static final JLabel ciaoLabel = new JLabel("  Ciao, accedi o registrati!");
+	private static final JButton registratiButton = new JButton("Registrati");
+	private static final JButton accediButton = new JButton("Accedi");
+	private static final JButton esciButton = new JButton("Esci");
+
+	private static final JPanel logPanel1 = new JPanel(new GridLayout(1, 2));
+	private static final JPanel logPanel = new JPanel(new GridLayout(2, 1));
+	private static final JLabel titoloLabel = new JLabel("          CD & DVD Shop Online                 ");
+	private static final JButton carrelloButton = new JButton("Carrello");
+	private static final JPanel nordPnl = new JPanel();
+	// Pannello Ovest
+	private static final JPanel ovestPnl = new JPanel(new GridLayout(20, 1));
+	private static final JLabel filtraPerLabel = new JLabel(" Filtra per: ");
+	private static final JComboBox<String> filtraPerComboBox = new JComboBox<String>(new String[] {
+			"        --- Seleziona ---", "Genere", "Artista", "Partecipante", "Prezzo crescente", "Prezzo decrescente" });
+	private static final JTextField filtraTextField = new JTextField("Cerca per...", 18);
+	private static final JButton cercaButton = new JButton("Cerca");
+	private static final JButton aggiornaButton = new JButton("Aggiorna catalogo");
+	
+	// Pannello Centrale
+	private static final JPanel centroPnl = new JPanel(new BorderLayout());
+	private static final JPanel sinistra = new JPanel(new GridLayout(catalogo.getTotProdottiCatalogo(), 1));
+	private static final JPanel centro = new JPanel(new GridLayout(catalogo.getTotProdottiCatalogo(), 1));
+	private static final JPanel destra = new JPanel(new GridLayout(catalogo.getTotProdottiCatalogo(), 1));
+	private static final int[] idProdotto = new int[catalogo.getTotProdottiCatalogo()];
+	private static final JPanel[] destra1 = new JPanel[catalogo.getTotProdottiCatalogo()];
+	private static final JLabel[] immagine = new JLabel[catalogo.getTotProdottiCatalogo()];
+	private static final JLabel[] info = new JLabel[catalogo.getTotProdottiCatalogo()];
+	private static final JButton[] aggiungi = new JButton[catalogo.getTotProdottiCatalogo()];
+	private static final JButton[] dettagli = new JButton[catalogo.getTotProdottiCatalogo()];
+
+	private HomePageListener homePageListener = new HomePageListener(this);
+//	private static final JPanel destra1 = new JPanel(new GridBagLayout());
+//	private static final JPanel destra2 = new JPanel(new GridBagLayout());
+//	private static final JLabel immagine1 = new JLabel();
+//	private static final JLabel info1 = new JLabel(
+//			"<HTML>&nbsp;TITOLO: Title <BR>&nbsp;ARTISTA: Artist <BR>&nbsp;PREZZO: 10,00€</HTML>");
+//	private static final JButton aggiungi1 = new JButton("Aggiungi al carrello");
+//	private static final JButton dettagli1 = new JButton("Dettagli del prodotto");
+//	private static final JLabel immagine2 = new JLabel();
+//	private static final JLabel info2 = new JLabel(
+//			"<HTML>&nbsp;TITOLO: Title1 <BR>&nbsp;ARTISTA: Artist1 <BR>&nbsp;PREZZO: 10,57€</HTML>");
+//	private static final JButton aggiungi2 = new JButton("Aggiungi al carrello");
+//	private static final JButton dettagli2 = new JButton("Dettagli del prodotto");
+
+	public HomePage() throws SQLException {
+		super(titolo);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		accedi.setVisible(false);
+		registrati.setVisible(false);
+		prodottoPage.setVisible(false);
+		gestioneNegozio.setVisible(false);
+		carrelloPage.setVisible(false);
+		
+		// Pannello Nord
+		logPanel.add(ciaoLabel);
+		titoloLabel.setFont(new Font("Serif", Font.BOLD, 45));
+		logPanel1.add(accediButton);
+		logPanel1.add(registratiButton);
+		logPanel1.setBackground(Color.lightGray);
+		logPanel.setBackground(Color.lightGray);
+		logPanel.add(logPanel1);
+		nordPnl.add(logPanel);
+		nordPnl.add(titoloLabel);
+		carrelloButton.setEnabled(false);
+		nordPnl.add(carrelloButton);
+		nordPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		nordPnl.setBackground(Color.lightGray);
+		// Pannello Ovest
+		filtraPerLabel.setFont(new Font("Serif", Font.BOLD, 22));
+
+		filtraTextField.setForeground(Color.GRAY);
+		filtraTextField.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				if (filtraTextField.getText().equals("Cerca per...")) {
+					filtraTextField.setText("");
+					filtraTextField.setForeground(Color.BLACK);
+				}
+			}
+
+			public void focusLost(FocusEvent e) {
+				if (filtraTextField.getText().isEmpty()) {
+					filtraTextField.setForeground(Color.GRAY);
+					filtraTextField.setText("Cerca per...");
+				}
+			}
+		});
+		ovestPnl.add(filtraPerLabel);
+		ovestPnl.add(filtraPerComboBox);
+		ovestPnl.add(filtraTextField);
+		ovestPnl.add(cercaButton);
+		ovestPnl.add(aggiornaButton);
+		ovestPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		ovestPnl.setBackground(Color.LIGHT_GRAY);
+		
+		
+		
+		// Pannello Centrale
+		ResultSet rs = catalogo.getCatalogo();
+		for(int i=0; i<catalogo.getTotProdottiCatalogo(); i++){
+			rs.next();
+			idProdotto[i] = rs.getInt(1);
+			destra1[i] = new JPanel(new GridBagLayout());
+			immagine[i] = new JLabel();
+			immagine[i].setIcon(new ImageIcon(new ImageIcon(rs.getString(5)).getImage().getScaledInstance(130,130, Image.SCALE_SMOOTH)));
+			info[i] = new JLabel("<HTML>&nbsp;TITOLO: " + rs.getString(2) + "<BR>&nbsp;ARTISTA: " + rs.getString(4) +" <BR>&nbsp;PREZZO: " + rs.getBigDecimal(3) + "€</HTML>");;
+			aggiungi[i] = new JButton("Aggiungi al carrello");
+			dettagli[i] = new JButton("Dettagli del prodotto");
+			sinistra.add(immagine[i], BorderLayout.WEST);
+			centro.add(info[i], BorderLayout.CENTER);
+			aggiungi[i].setEnabled(false);
+			destra1[i].add(aggiungi[i]);
+			destra1[i].add(dettagli[i]);
+			destra.add(destra1[i], BorderLayout.EAST);
+
+			dettagli[i].addActionListener(homePageListener);
+			dettagli[i].setActionCommand(homePageListener.DETTAGLI);
+			aggiungi[i].addActionListener(homePageListener);
+			aggiungi[i].setActionCommand(homePageListener.AGGIUNGI);
+		}
+		centroPnl.add(sinistra, BorderLayout.WEST);
+		centroPnl.add(centro, BorderLayout.CENTER);
+		centroPnl.add(destra, BorderLayout.EAST);
+//		immagine1.setIcon(new ImageIcon(new ImageIcon("/Users/Ross/Desktop/CD.png").getImage().getScaledInstance(130,
+//				130, Image.SCALE_SMOOTH)));
+//		sinistra.add(immagine1, BorderLayout.WEST);
+//		centro.add(info1, BorderLayout.CENTER);
+//		aggiungi1.setEnabled(false);
+//		destra1.add(aggiungi1);
+//		destra1.add(dettagli1);
+//		destra.add(destra1, BorderLayout.EAST);
+//		immagine2.setIcon(new ImageIcon(new ImageIcon("/Users/Ross/Desktop/IMG_20140608_175240.jpg").getImage()
+//				.getScaledInstance(130, 130, Image.SCALE_SMOOTH)));
+//		sinistra.add(immagine2, BorderLayout.WEST);
+//		centro.add(info2, BorderLayout.CENTER);
+//		aggiungi2.setEnabled(false);
+//		destra2.add(aggiungi2);
+//		destra2.add(dettagli2);
+//		destra.add(destra2, BorderLayout.EAST);
+
+		// Scroll Bar
+		JScrollPane scrollPane = new JScrollPane(centroPnl);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(15);
+		scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+
+		// Container Pricipale
+		Container frmContentPane = this.getContentPane();
+		frmContentPane.add(nordPnl, BorderLayout.NORTH);
+		frmContentPane.add(ovestPnl, BorderLayout.WEST);
+		frmContentPane.add(scrollPane, BorderLayout.CENTER);
+
+		// Impostazioni di visualizzazione
+		this.pack();
+		this.setSize(larghezza, altezza);
+		this.setLocationRelativeTo(null);
+		
+		accediButton.addActionListener(homePageListener);
+		accediButton.setActionCommand(homePageListener.ACCEDI);
+		registratiButton.addActionListener(homePageListener);
+		registratiButton.setActionCommand(homePageListener.REGISTRATI);
+		carrelloButton.addActionListener(homePageListener);
+		carrelloButton.setActionCommand(homePageListener.CARRELLO);
+		cercaButton.addActionListener(homePageListener);
+		cercaButton.setActionCommand(homePageListener.CERCA);
+		aggiornaButton.addActionListener(homePageListener);
+		aggiornaButton.setActionCommand(homePageListener.AGGIORNA);
+		esciButton.addActionListener(homePageListener);
+		esciButton.setActionCommand(homePageListener.ESCI);
+	}
+	 
+	public static JButton getAccedibutton() {
+		return accediButton;
+	}
+
+	public static JButton getRegistratibutton() {
+		return registratiButton;
+	}
+
+	public static JButton getCarrellobutton() {
+		return carrelloButton;
+	}
+	
+	public static JButton getCercabutton() {
+		return cercaButton;
+	}
+
+	public static JComboBox<String> getFiltrapercombobox() {
+		return filtraPerComboBox;
+	}
+
+	public static JTextField getFiltratextfield() {
+		return filtraTextField;
+	}
+
+	public HomePageListener getHomePageListener() {
+		return homePageListener;
+	}
+
+	public static String getTitolo() {
+		return titolo;
+	}
+
+	public static int getLarghezza() {
+		return larghezza;
+	}
+
+	public static int getAltezza() {
+		return altezza;
+	}
+
+	public static JLabel getCiaolabel() {
+		return ciaoLabel;
+	}
+
+	public static JPanel getLogpanel1() {
+		return logPanel1;
+	}
+
+	public static JPanel getLogpanel() {
+		return logPanel;
+	}
+
+	public static JLabel getTitololabel() {
+		return titoloLabel;
+	}
+
+	public static JPanel getNordpnl() {
+		return nordPnl;
+	}
+
+	public static JPanel getOvestpnl() {
+		return ovestPnl;
+	}
+
+	public static JLabel getFiltraperlabel() {
+		return filtraPerLabel;
+	}
+
+	public static JButton getAggiornabutton() {
+		return aggiornaButton;
+	}
+
+	public static JPanel getCentropnl() {
+		return centroPnl;
+	}
+
+	public static Catalogo getCatalogo() {
+		return catalogo;
+	}
+
+	public static JPanel getSinistra() {
+		return sinistra;
+	}
+
+	public static JPanel getCentro() {
+		return centro;
+	}
+
+	public static JPanel getDestra() {
+		return destra;
+	}
+
+	public static JPanel[] getDestra1() {
+		return destra1;
+	}
+
+	public static JLabel[] getImmagine() {
+		return immagine;
+	}
+
+	public static JLabel[] getInfo() {
+		return info;
+	}
+
+	public static JButton[] getAggiungi() {
+		return aggiungi;
+	}
+
+	public static JButton[] getDettagli() {
+		return dettagli;
+	}
+
+	public static Cliente getCliente() {
+		return cliente;
+	}
+
+	public static int[] getIdprodotto() {
+		return idProdotto;
+	}
+
+	public static Carrello getCarrello() {
+		return carrello;
+	}
+	
+
+	public static void setCarrello(Carrello carrello) {
+		HomePage.carrello = carrello;
+	}
+
+	public static JButton getEscibutton() {
+		return esciButton;
+	}
+	
+	public Accedi getAccedi() {
+		return accedi;
+	}
+
+	public CarrelloPage getCarrelloPage() {
+		return carrelloPage;
+	}
+
+	public void setCarrelloPage(CarrelloPage carrelloPage) {
+		this.carrelloPage = carrelloPage;
+	}
+
+	public Registrati getRegistrati() {
+		return registrati;
+	}
+
+	public void setRegistrati(Registrati registrati) {
+		this.registrati = registrati;
+	}
+
+	public ProdottoPage getProdottoPage() {
+		return prodottoPage;
+	}
+
+	public void setProdottoPage(ProdottoPage prodottoPage) {
+		this.prodottoPage = prodottoPage;
+	}
+
+	public GestioneNegozio getGestioneNegozio() {
+		return gestioneNegozio;
+	}
+
+	public void setGestioneNegozio(GestioneNegozio gestioneNegozio) {
+		this.gestioneNegozio = gestioneNegozio;
+	}
+}

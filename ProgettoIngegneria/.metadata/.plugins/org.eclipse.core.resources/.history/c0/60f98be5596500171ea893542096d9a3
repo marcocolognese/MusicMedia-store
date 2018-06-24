@@ -1,0 +1,60 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+public class AggiungiProdottoListener implements ActionListener{
+	private static AggiungiProdotto aggiungiProdotto;
+	private static HomePage homePage;
+	public final String AGGIUNGI = "aggiungi";
+	
+	AggiungiProdottoListener(AggiungiProdotto aggiungiProdotto, HomePage homePage) {
+		this.aggiungiProdotto = aggiungiProdotto;
+		this.homePage = homePage;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case AGGIUNGI:
+			Aggiungi();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void Aggiungi() {
+		if(aggiungiProdotto.getCodicetext().getText().trim().length() != 0 && 
+				aggiungiProdotto.getTitolotext().getText().trim().length() != 0 &&
+				aggiungiProdotto.getStrumentitext().getText().trim().length() != 0){
+			if(aggiungiMusicista.getAnnotext().getText().trim().length() != 0){
+				if(aggiungiMusicista.getAnnotext().getText().trim().matches("[0-9]{4}")) {
+					if(!HomePage.getPersonaleAutorizzato().inserisciMusicista(aggiungiMusicista.getNometext().getText().trim(), aggiungiMusicista.getGeneretext().getText().trim(), Integer.valueOf(aggiungiMusicista.getAnnotext().getText().trim()), aggiungiMusicista.getStrumentitext().getText().trim())){
+						JOptionPane.showMessageDialog(null, "Il nome d'arte inserito non è disponibile.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+						return;
+					}
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Inserire un anno di nascita corretto.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+					return;
+				}
+			}
+			else{
+				if(!HomePage.getPersonaleAutorizzato().inserisciMusicista(aggiungiMusicista.getNometext().getText().trim(), aggiungiMusicista.getGeneretext().getText().trim(), aggiungiMusicista.getStrumentitext().getText().trim())){
+					JOptionPane.showMessageDialog(null, "Il nome d'arte inserito non è disponibile.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+					return;
+				}
+			}
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "Completare tutti i campi.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+			return;
+		}
+		
+		aggiungiMusicista.dispose();
+	}
+}

@@ -1,0 +1,59 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+public class GestioneNegozioListener implements ActionListener{
+	
+	private static GestioneNegozio gestioneNegozio;
+	private static HomePage homePage;
+	public final String MODIFICA = "Modifica";
+	
+	GestioneNegozioListener(GestioneNegozio gestioneNegozio, HomePage homePage) {
+		this.gestioneNegozio = gestioneNegozio;
+		this.homePage =homePage;
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case MODIFICA:
+			try {
+				modifica(e);
+			} catch (SQLException e1) {
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+	
+	private void modifica(ActionEvent event) throws SQLException {
+//		int i=0;
+//		boolean nonTrovato = true;
+//		Disk disco = new Disk();
+//		while (nonTrovato){
+//			if (event.getSource() == CarrelloPage.getModifica()[i]){
+//				ResultSet rs = disco.getInfo((int)CarrelloPage.getIdprodotto()[i]);
+//				if(rs.getInt(13) >= (int)CarrelloPage.getQuantita()[i].getValue())
+//					HomePage.getCarrello().aggiungiProdotto((int)CarrelloPage.getIdprodotto()[i], (int)CarrelloPage.getQuantita()[i].getValue());
+//				else{
+//					JOptionPane.showMessageDialog(null, "Sono diponibili solo altri" + rs.getInt(13) + " prodotti di questo tipo e sono stati aggiunti al carrello.\n", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+//					CarrelloPage.getQuantita()[i].setValue(rs.getInt(13));
+//					HomePage.getCarrello().aggiungiProdotto((int)CarrelloPage.getIdprodotto()[i], rs.getInt(13));
+//				}
+//				nonTrovato = false;
+//	        }
+//			i++;
+//		}
+	}
+}
+

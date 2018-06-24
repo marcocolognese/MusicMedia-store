@@ -1,0 +1,14 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.event.ActionListener;
+
+public class CarrelloPageListener implements ActionListener{
+
+	private static CarrelloPage carrelloPage;
+	public final String AGGIUNGI = "Aggiungi";
+	public final String DETTAGLI = "Dettagli";
+	
+	CarrelloPageListener(CarrelloPage frame) {
+		carrelloPage = frame;
+	}
+}

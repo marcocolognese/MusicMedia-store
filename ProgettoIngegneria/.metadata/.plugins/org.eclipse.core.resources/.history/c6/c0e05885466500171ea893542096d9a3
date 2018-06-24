@@ -1,0 +1,33 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
+public class AggiungiMusicistaListener implements ActionListener{
+
+	private static AggiungiMusicista aggiungiMusicista;
+	private static HomePage homePage;
+	public final String MUSICISTA = "Musicista";
+	
+	AggiungiMusicistaListener(AggiungiMusicista aggiungiMusicista, HomePage homePage) {
+		this.aggiungiMusicista = aggiungiMusicista;
+		this.homePage = homePage;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case MUSICISTA:
+			Musicista();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void Musicista() {
+
+	}
+
+}

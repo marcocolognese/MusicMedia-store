@@ -1,0 +1,236 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.*;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.util.Formatter;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+public class CarrelloPage extends JFrame {
+	private static final String titolo = "Carrello";
+	private static final int larghezza = 1100, altezza = 700;
+
+	// Pannello Nord
+	private static final JLabel titoloLabel = new JLabel("Carrello");
+	private static final JPanel nordPnl = new JPanel();
+	// Pannello Centrale
+	private static final JPanel centroPnl = new JPanel(new BorderLayout());
+	private static final JPanel sinistra = new JPanel(new GridLayout(HomePage.getCarrello().getTotProdottiCarrello(), 1));
+	private static final JPanel centro = new JPanel(new GridLayout(HomePage.getCarrello().getTotProdottiCarrello(), 1));
+	private static final JPanel destra = new JPanel(new GridLayout(HomePage.getCarrello().getTotProdottiCarrello(), 1));
+	
+
+	private static final int[] idProdotto = new int[HomePage.getCarrello().getTotProdottiCarrello()];
+	private static final JPanel[] destra1 = new JPanel[HomePage.getCarrello().getTotProdottiCarrello()];
+	private static final JLabel[] immagine = new JLabel[HomePage.getCarrello().getTotProdottiCarrello()];
+	private static final JLabel[] info = new JLabel[HomePage.getCarrello().getTotProdottiCarrello()];
+	private static final JButton[] dettagli = new JButton[HomePage.getCarrello().getTotProdottiCarrello()];
+	private static final JLabel[] quantitaLabel = new JLabel[HomePage.getCarrello().getTotProdottiCarrello()];
+	private static final JSpinner[] quantita = new JSpinner[HomePage.getCarrello().getTotProdottiCarrello()];
+	private static final JButton[] modifica = new JButton[HomePage.getCarrello().getTotProdottiCarrello()];
+	
+	
+	// Pannello Sud
+	private static final JButton svuotaButton = new JButton("Svuota carrello");
+	private static final JButton confermaButton = new JButton("Conferma ordine");
+	private BigDecimal prezzoTot = new BigDecimal(0);
+	private static  JLabel totaleLabel = new JLabel("");
+	private static final JPanel sudPnl = new JPanel();
+	int i;
+	
+
+	private CarrelloPageListener carrelloPageListener;
+
+	public CarrelloPage(HomePage homePage) throws SQLException {
+		super(titolo);
+		this.setVisible(true);
+		carrelloPageListener = new CarrelloPageListener(this, homePage);
+		Carrello carrello = new Carrello(HomePage.getCliente().getNomeUtente());
+
+		// Pannello Nord
+		titoloLabel.setFont(new Font("Serif", Font.BOLD, 45));
+		nordPnl.add(titoloLabel);
+		nordPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		nordPnl.setBackground(Color.lightGray);
+		// Pannello Centrale
+		ResultSet rs = HomePage.getCarrello().getProdotti();
+		System.err.println("ID:" +carrello.getId());
+		for(i=0; i < HomePage.getCarrello().getTotProdottiCarrello(); i++){
+			rs.next();
+			idProdotto[i] = rs.getInt(1);
+			quantitaLabel[i] = new JLabel("Quantità: ");
+			quantita[i] = new JSpinner(new SpinnerNumberModel(rs.getInt(6), 0, 99999, 1));
+			modifica[i] = new JButton("Modifica quantità");
+			destra1[i] = new JPanel(new GridBagLayout());
+			immagine[i] = new JLabel();
+			immagine[i].setIcon(new ImageIcon(new ImageIcon(rs.getString(5)).getImage().getScaledInstance(130,130, Image.SCALE_SMOOTH)));
+			BigDecimal prezzo = rs.getBigDecimal(3);
+			prezzoTot = prezzo.add(prezzoTot);
+			if(HomePage.getCatalogo().getCatalogoScontato(HomePage.getCliente().getNomeUtente()))
+				prezzo = prezzo.multiply(new BigDecimal(0.8));
+			info[i] = new JLabel("<HTML>&nbsp;TITOLO: " + rs.getString(2) + "<BR>&nbsp;ARTISTA: " + rs.getString(4) +" <BR>&nbsp;PREZZO: " + prezzo.setScale(2, BigDecimal.ROUND_UP) + "€</HTML>");;
+			dettagli[i] = new JButton("Dettagli del prodotto");
+			sinistra.add(immagine[i], BorderLayout.WEST);
+			centro.add(info[i], BorderLayout.CENTER);
+			destra1[i].add(quantitaLabel[i]);
+			destra1[i].add(quantita[i]);
+			destra1[i].add(modifica[i]);
+			destra1[i].add(dettagli[i]);
+			destra.add(destra1[i], BorderLayout.EAST);
+			
+			modifica[i].addActionListener(carrelloPageListener);
+			modifica[i].setActionCommand(carrelloPageListener.MODIFICA);
+			dettagli[i].addActionListener(carrelloPageListener);
+			dettagli[i].setActionCommand(carrelloPageListener.DETTAGLI);
+		}
+		centroPnl.add(sinistra, BorderLayout.WEST);
+		centroPnl.add(centro, BorderLayout.CENTER);
+		centroPnl.add(destra, BorderLayout.EAST);
+//		immagine1.setIcon(new ImageIcon(new ImageIcon("/Users/Ross/Desktop/CD.png").getImage().getScaledInstance(130,
+//				130, Image.SCALE_SMOOTH)));
+//		centroPnl.add(sinistra, BorderLayout.WEST);
+//		centroPnl.add(centro, BorderLayout.CENTER);
+//		centroPnl.add(destra, BorderLayout.EAST);
+//		sinistra.add(immagine1, BorderLayout.WEST);
+//		centro.add(info1, BorderLayout.CENTER);
+//		destra1.add(quantitaLabel1);
+//		destra1.add(quantita1);
+//		destra1.add(dettagli1);
+//		destra1.add(rimuovi1);
+//		destra.add(destra1, BorderLayout.EAST);
+//
+//		immagine2.setIcon(new ImageIcon(new ImageIcon("/Users/Ross/Desktop/CD.png").getImage().getScaledInstance(130,
+//				130, Image.SCALE_SMOOTH)));
+//		sinistra.add(immagine2, BorderLayout.WEST);
+//		centro.add(info2, BorderLayout.CENTER);
+//		destra2.add(quantitaLabel2);
+//		destra2.add(quantita2);
+//		destra2.add(dettagli2);
+//		destra2.add(rimuovi2);
+//		destra.add(destra2, BorderLayout.EAST);
+		// Pannello Sud
+		totaleLabel = new JLabel(
+		"  Totale: "+ prezzoTot.setScale(2, BigDecimal.ROUND_UP) + "€                                                                                                                                                                     ");
+		totaleLabel.setFont(new Font("Serif", Font.BOLD, 17));
+		sudPnl.add(totaleLabel);
+		sudPnl.add(svuotaButton);
+		sudPnl.add(confermaButton);
+		sudPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+		// Scroll Bar
+		JScrollPane scrollPane = new JScrollPane(centroPnl);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(15);
+		scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+
+		// Container Pricipale
+		Container frmContentPane = this.getContentPane();
+		frmContentPane.add(nordPnl, BorderLayout.NORTH);
+		frmContentPane.add(scrollPane, BorderLayout.CENTER);
+		frmContentPane.add(sudPnl, BorderLayout.SOUTH);
+
+		// Impostazioni di visualizzazione
+		this.pack();
+		this.setSize(larghezza, altezza);
+		this.setLocationRelativeTo(null);
+	}
+
+	public static String getTitolo() {
+		return titolo;
+	}
+
+	public static int getLarghezza() {
+		return larghezza;
+	}
+
+	public static int getAltezza() {
+		return altezza;
+	}
+
+	public static JLabel getTitololabel() {
+		return titoloLabel;
+	}
+
+	public static JPanel getNordpnl() {
+		return nordPnl;
+	}
+
+	public static JPanel getCentropnl() {
+		return centroPnl;
+	}
+
+	public static JPanel getSinistra() {
+		return sinistra;
+	}
+
+	public static JPanel getCentro() {
+		return centro;
+	}
+
+	public static JPanel getDestra() {
+		return destra;
+	}
+
+	public static int[] getIdprodotto() {
+		return idProdotto;
+	}
+
+	public static JPanel[] getDestra1() {
+		return destra1;
+	}
+
+	public static JLabel[] getImmagine() {
+		return immagine;
+	}
+
+	public static JLabel[] getInfo() {
+		return info;
+	}
+
+	public static JButton[] getDettagli() {
+		return dettagli;
+	}
+
+	public static JLabel[] getQuantitalabel() {
+		return quantitaLabel;
+	}
+
+	public static JSpinner[] getQuantita() {
+		return quantita;
+	}
+
+	public static JButton getSvuotabutton() {
+		return svuotaButton;
+	}
+
+	public static JButton getConfermabutton() {
+		return confermaButton;
+	}
+
+	public BigDecimal getPrezzoTot() {
+		return prezzoTot;
+	}
+
+	public static JLabel getTotaleLabel() {
+		return totaleLabel;
+	}
+
+	public static JPanel getSudpnl() {
+		return sudPnl;
+	}
+
+	public int getI() {
+		return i;
+	}
+
+	public CarrelloPageListener getCarrelloPageListener() {
+		return carrelloPageListener;
+	}
+}

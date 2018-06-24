@@ -1,0 +1,60 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+public class AggiungiMusicistaListener implements ActionListener{
+
+	private static AggiungiMusicista aggiungiMusicista;
+	private static HomePage homePage;
+	public final String AGGIUNGI = "Aggiungi";
+	
+	AggiungiMusicistaListener(AggiungiMusicista aggiungiMusicista, HomePage homePage) {
+		this.aggiungiMusicista = aggiungiMusicista;
+		this.homePage = homePage;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case AGGIUNGI:
+			Aggiungi();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void Aggiungi() {
+		if(aggiungiMusicista.getNometext().getText().trim().length() != 0 && 
+				aggiungiMusicista.getGeneretext().getText().trim().length() != 0 &&
+				aggiungiMusicista.getStrumentitext().getText().trim().length() != 0){
+			if(aggiungiMusicista.getAnnotext().getText().trim().length() != 0){
+				if(aggiungiMusicista.getAnnotext().getText().trim().matches("[0-9]{4}")) {
+					if(!HomePage.getPersonaleAutorizzato().inserisciMusicista(aggiungiMusicista.getNometext().getText().trim(), aggiungiMusicista.getGeneretext().getText().trim(), annoNascita, strumenti)){
+						JOptionPane.showMessageDialog(null, "Il nome d'arte inserito non è disponibile.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+						return;
+					}
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Inserire un anno di nascita corretto.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+					return;
+				}
+			}
+			else{
+				if(!HomePage.getPersonaleAutorizzato().signUp(Registrati.getCodfistext().getText().trim(), Registrati.getNomeutentetext().getText().trim(), Registrati.getPasswordtext().getText().trim(), Registrati.getNometext().getText().trim(), Registrati.getCognometext().getText().trim(), Registrati.getCittatext().getText().trim(), Registrati.getTelefonotext().getText().trim())){
+					JOptionPane.showMessageDialog(null, "Il nome d'arte inserito non è disponibile.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+					return;
+				}
+			}
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "Completare tutti i campi.", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+			return;
+		}
+	}
+}

@@ -1,0 +1,56 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+public class GestioneNegozioListener implements ActionListener{
+	
+	private static GestioneNegozio gestioneNegozio;
+	private static HomePage homePage;
+	public final String MUSICISTA = "Musicista";
+	public final String PRODOTTO = "Prodotto";
+	public final String CONFERMA = "Conferma";
+	
+	GestioneNegozioListener(GestioneNegozio gestioneNegozio, HomePage homePage) {
+		this.gestioneNegozio = gestioneNegozio;
+		this.homePage =homePage;
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case MUSICISTA:
+			Musicista();
+			break;
+		case PRODOTTO:
+			prodotto();
+			break;
+		case CONFERMA:
+			conferma();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	
+	private void Musicista() {
+		
+	}
+	
+	private void prodotto() {
+		
+	}
+	
+	private void conferma() {
+	
+}
+}
+

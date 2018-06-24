@@ -1,0 +1,67 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+
+public class GestioneNegozioListener implements ActionListener {
+
+	private static GestioneNegozio gestioneNegozio;
+	private static HomePage homePage;
+	public final String MUSICISTA = "Musicista";
+	public final String PRODOTTO = "Prodotto";
+	public final String CONFERMA = "Conferma";
+
+	GestioneNegozioListener(GestioneNegozio gestioneNegozio, HomePage homePage) {
+		this.gestioneNegozio = gestioneNegozio;
+		this.homePage = homePage;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case MUSICISTA:
+			Musicista();
+			break;
+		case PRODOTTO:
+			prodotto();
+			break;
+		case CONFERMA:
+			try {
+				conferma();
+			} catch (SQLException e1) {
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void Musicista() {
+
+	}
+
+	private void prodotto() {
+
+	}
+
+	private void conferma() throws SQLException {
+		Disk disco = new Disk();
+		ResultSet rs = HomePage.getCatalogo().getCatalogo();
+		for(int i=0; i<HomePage.getCatalogo().getTotProdottiCatalogo(); i++){
+			rs.next();
+//			idProdotto[i] = rs.getInt(1);
+//			GestioneNegozio.getQuantita()[i].getValue().toString();
+		}
+	}
+}

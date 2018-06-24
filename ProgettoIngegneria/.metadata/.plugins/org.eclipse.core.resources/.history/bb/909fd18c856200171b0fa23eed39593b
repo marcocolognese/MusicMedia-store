@@ -1,0 +1,61 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class ProdottoPage extends JFrame {
+	private static final String titolo = "Prodotto";
+	private static final int larghezza = 700, altezza = 500;
+
+	// Pannello Nord
+	private static final JLabel titoloLabel = new JLabel("Prodotto");
+	private static final JPanel nordPnl = new JPanel();
+	// Pannello Centrale
+	private static final JPanel centroPnl = new JPanel(new BorderLayout());
+	private static final JPanel nord = new JPanel(new GridLayout(1, 1));
+	private static final JPanel centro = new JPanel(new GridLayout(2, 1));
+	private static final JPanel nord1 = new JPanel(new GridBagLayout());
+	private static final JLabel immagine = new JLabel();
+	private static final JLabel info = new JLabel();//("<HTML>&nbsp;<B>TITOLO:</B> Title<BR>&nbsp;<B>ARTISTA:</B> Artist<BR>&nbsp;<B>PREZZO:</B> 10,00€</HTML>");
+	// Pannello Sud
+	private static final JLabel quantitaLabel = new JLabel("Quantità: ");
+	private static final JSpinner quantitaSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 50, 1));
+	private static final JButton aggiungiButton = new JButton("Aggiungi al carrello");
+	private static final JPanel sudPnl = new JPanel();
+
+	public ProdottoPage(int id) {
+		super(titolo);
+		this.setVisible(true);
+		
+		// Pannello Nord
+		titoloLabel.setFont(new Font("Serif", Font.BOLD, 45));
+		nordPnl.add(titoloLabel);
+		nordPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		nordPnl.setBackground(Color.lightGray);
+		// Pannello Centrale
+		immagine.setIcon(new ImageIcon(new ImageIcon("/Users/Ross/Desktop/CD.png").getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH)));
+		nord1.add(immagine);
+		nord.add(nord1);
+		centro.add(nord);
+		info.setFont(new Font("Serif", Font.PLAIN, 17));
+		centro.add(info);
+		centroPnl.add(centro);
+		// Pannello Sud
+		quantitaLabel.setFont(new Font("Serif", Font.PLAIN, 17));
+		sudPnl.add(quantitaLabel);
+		sudPnl.add(quantitaSpinner);
+		sudPnl.add(aggiungiButton);
+		sudPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		// Container Pricipale
+		Container frmContentPane = this.getContentPane();
+		frmContentPane.add(nordPnl, BorderLayout.NORTH);
+		frmContentPane.add(centroPnl, BorderLayout.CENTER);
+		frmContentPane.add(sudPnl, BorderLayout.SOUTH);
+
+		// Impostazioni di visualizzazione
+		this.pack();
+		this.setSize(larghezza, altezza);
+		this.setLocationRelativeTo(null);
+	}
+}

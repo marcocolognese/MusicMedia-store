@@ -1,0 +1,37 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.List;
+
+import javax.swing.*;
+
+public class OrdineListener implements ActionListener {
+
+	private static Accedi accedi;
+	private static HomePage homePage;
+	public final String CONFERMA = "Conferma";
+
+	OrdineListener() {
+//		this.accedi = accedi;
+//		this.homePage = homePage;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case CONFERMA:
+				conferma();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void conferma() {
+//		if
+		
+	}
+}

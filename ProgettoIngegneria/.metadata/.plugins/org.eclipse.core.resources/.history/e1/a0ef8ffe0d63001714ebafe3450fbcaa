@@ -1,0 +1,12 @@
+package Progetto_Colognese_Rossini;
+
+public class CarrelloPageListener {
+
+	private static CarrelloPage carrelloPage;
+	public final String AGGIUNGI = "Aggiungi";
+	public final String DETTAGLI = "Dettagli";
+	
+	CarrelloPageListener(CarrelloPage frame) {
+		carrelloPage = frame;
+	}
+}

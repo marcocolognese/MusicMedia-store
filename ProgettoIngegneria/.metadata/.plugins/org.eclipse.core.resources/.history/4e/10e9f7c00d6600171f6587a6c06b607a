@@ -1,0 +1,218 @@
+package Progetto_Colognese_Rossini;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class PersonaleAutorizzato {
+
+	private boolean modificato;
+	private static String id;
+	Connection conn;
+	PreparedStatement ps;
+
+	public PersonaleAutorizzato(String nome) {
+		try {
+			this.id = nome;
+			Class.forName("org.postgresql.Driver");
+			conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ingegneria", "Ross", "");
+		} catch (Exception e) {
+		}
+	}
+
+	public String getNomeUtente() {
+		return this.id;
+	}
+
+	public void setNomeUtente(String id) {
+		this.id = id;
+	}
+
+	public void logOut() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+		}
+	}
+
+	public int aggiungiProdotto(int codice, String titolo, String titoliPezzi, BigDecimal prezzo, String titolare,
+			String descrizione, String genere, String tipo, String musicisti, String strumenti, int totMagazzino) {
+		try {
+			ps = conn.prepareStatement("SELECT * FROM Disk WHERE codice = ?");
+			ps.setInt(1, codice);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				ps = conn.prepareStatement("SELECT * FROM Musicista WHERE nomeArte = ?");
+				ps.setString(1, titolare);
+				rs = ps.executeQuery();
+				if (rs.next()) {
+					ps = conn.prepareStatement(
+							"INSERT INTO Disk (codice, titolo, titoliPezzi, prezzo, dataPubblicazioneSito, titolare, descrizione, genere, tipo, musicisti, strumenti, totMagazzino) VALUES(?, ?, ?, ?, CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)");
+					ps.setInt(1, codice);
+					ps.setString(2, titolo);
+					ps.setString(3, titoliPezzi);
+					ps.setBigDecimal(4, prezzo);
+					ps.setString(5, titolare);
+					ps.setString(6, descrizione);
+					ps.setString(7, genere);
+					ps.setString(8, tipo);
+					ps.setString(9, musicisti);
+					ps.setString(10, strumenti);
+					ps.setInt(11, totMagazzino);
+					ps.executeUpdate();
+					return 1;
+				} else // non esiste il musicista
+					return 2;
+			}
+			return 3;
+		} catch (SQLException e) {
+			return 4;
+		}
+	}
+
+	public int aggiungiProdotto(int codice, String titolo, String titoliPezzi, String copertina, BigDecimal prezzo,
+			String titolare, String descrizione, String genere, String tipo, String musicisti, String strumenti,
+			int totMagazzino) {
+		try {
+			ps = conn.prepareStatement("SELECT * FROM Disk WHERE codice = ?");
+			ps.setInt(1, codice);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				ps = conn.prepareStatement("SELECT * FROM Musicista WHERE nomeArte = ?");
+				ps.setString(1, titolare);
+				rs = ps.executeQuery();
+				if (rs.next()) {
+					ps = conn.prepareStatement(
+							"INSERT INTO Disk (codice, titolo, titoliPezzi, copertina, prezzo, dataPubblicazioneSito, titolare, descrizione, genere, tipo, musicisti, strumenti, totMagazzino) VALUES(?, ?, ?, ?, ?, CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)");
+					ps.setInt(1, codice);
+					ps.setString(2, titolo);
+					ps.setString(3, titoliPezzi);
+					ps.setString(4, copertina);
+					ps.setBigDecimal(5, prezzo);
+					ps.setString(6, titolare);
+					ps.setString(7, descrizione);
+					ps.setString(8, genere);
+					ps.setString(9, tipo);
+					ps.setString(10, musicisti);
+					ps.setString(11, strumenti);
+					ps.setInt(12, totMagazzino);
+					ps.executeUpdate();
+					return 1;
+				} else // non esiste il musicista
+					return 2;
+			}
+			return 3;
+		} catch (SQLException e) {
+			return 4;
+		}
+	}
+
+	public Boolean inserisciMusicista(String nomeArte, String genere, int annoNascita, String strumenti) {
+		try {
+			ps = conn.prepareStatement("SELECT * FROM Musicista WHERE nomeArte = ?");
+			ps.setString(1, nomeArte);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				ps = conn.prepareStatement(
+						"INSERT INTO Musicista (nomeArte, genere, annoNascita, strumenti) VALUES(?, ?, ?, ?)");
+				ps.setString(1, nomeArte);
+				ps.setString(2, genere);
+				ps.setInt(3, annoNascita);
+				ps.setString(4, strumenti);
+				ps.executeUpdate();
+				return true;
+			} else
+				return false;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+
+	public Boolean inserisciMusicista(String nomeArte, String genere, String strumenti) {
+		try {
+			ps = conn.prepareStatement("SELECT * FROM Musicista WHERE nomeArte = ?");
+			ps.setString(1, nomeArte);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				ps = conn.prepareStatement("INSERT INTO Musicista (nomeArte, genere, strumenti) VALUES(?, ?, ?)");
+				ps.setString(1, nomeArte);
+				ps.setString(2, genere);
+				ps.setString(3, strumenti);
+				ps.executeUpdate();
+				return true;
+			} else
+				return false;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+
+	public void incrementaScorteProdotto(int codice) {
+		try {
+			ps = conn.prepareStatement("UPDATE Disk SET totMagazzino = totMagazzino + 1 WHERE codice = ?");
+			ps.setInt(1, codice);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+		}
+	}
+
+	public void decrementaScorteProdotto(int codice) {
+		try {
+			ps = conn.prepareStatement("UPDATE Disk SET totMagazzino = totMagazzino - 1 WHERE codice = ?");
+			ps.setInt(1, codice);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+		}
+	}
+
+	public Boolean modificaScorteProdotto(int codice, int nuovaQuantità) {
+		try {
+			ps = conn.prepareStatement("SELECT * FROM Disk WHERE codice = ?");
+			ps.setInt(1, codice);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next())
+				return false;
+			ps = conn.prepareStatement("UPDATE Disk SET totMagazzino = ? WHERE codice = ?");
+			ps.setInt(1, nuovaQuantità);
+			ps.setInt(2, codice);
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+
+	public ResultSet notifica() {
+		try {
+			ps = conn.prepareStatement("SELECT codice, titolo FROM Disk WHERE totMagazzino < ?");
+			ps.setInt(1, 2);
+			return ps.executeQuery();
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+
+	public ResultSet getCatalogo() {
+		try {
+			ps = conn.prepareStatement(
+					"SELECT codice, titolo, prezzo, titolare, totMagazzino, copertina FROM Disk ORDER BY titolo ASC");
+			return ps.executeQuery();
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+
+	public int getTotProdottiCatalogo() {
+		try {
+			ps = conn.prepareStatement("SELECT COUNT(*) FROM Disk");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			return 0;
+		}
+	}
+}

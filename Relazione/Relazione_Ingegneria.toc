@@ -1,0 +1,24 @@
+\select@language {italian}
+\select@language {italian}
+\contentsline {chapter}{Specifica}{2}
+\contentsline {chapter}{Analisi dei requisiti}{3}
+\contentsline {section}{Interpretazione dei requisiti e scelte progettuali}{4}
+\contentsline {chapter}{Use Case}{5}
+\contentsline {section}{UC1: Catalogo}{5}
+\contentsline {section}{UC2: Cliente}{6}
+\contentsline {section}{UC3: Carrello}{7}
+\contentsline {section}{UC4: Personale autorizzato}{8}
+\contentsline {chapter}{Sequence Diagram}{9}
+\contentsline {section}{Catalogo}{9}
+\contentsline {section}{Cliente}{10}
+\contentsline {section}{Carrello}{11}
+\contentsline {section}{Personale autorizzato}{12}
+\contentsline {chapter}{Activity Diagram}{13}
+\contentsline {section}{Catalogo}{13}
+\contentsline {section}{Cliente}{14}
+\contentsline {section}{Carrello}{15}
+\contentsline {section}{Personale autorizzato}{16}
+\contentsline {chapter}{Class Diagram}{17}
+\contentsline {chapter}{Design Pattern}{18}
+\contentsline {chapter}{Pattern architetturale}{19}
+\contentsline {chapter}{Unit \& System Tests}{20}

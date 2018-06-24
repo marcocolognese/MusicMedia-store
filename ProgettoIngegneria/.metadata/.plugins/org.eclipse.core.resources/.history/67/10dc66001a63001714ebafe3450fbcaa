@@ -1,0 +1,79 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+
+public class CarrelloPageListener implements ActionListener{
+
+	private static CarrelloPage carrelloPage;
+	private static HomePage homePage;
+	public final String DETTAGLI = "Dettagli";
+	
+	CarrelloPageListener(CarrelloPage carrelloPage, HomePage homePage) {
+		this.carrelloPage = carrelloPage;
+		this.homePage =homePage;
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case DETTAGLI:
+//			try {
+////				dettagli(e);
+//			} catch (SQLException e1) {
+//			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+//	private void aggiungi(ActionEvent event) throws SQLException {
+//		int i=0;
+//		boolean nonTrovato = true;
+//		Disk disco = new Disk();
+//		while (nonTrovato){
+//			if (event.getSource() == HomePage.getAggiungi()[i]){
+//				ResultSet rs = disco.getInfo((int)HomePage.getIdprodotto()[i]);
+//				if(rs.getInt(13) > 0)
+//					HomePage.getCarrello().aggiungiProdotto((int)HomePage.getIdprodotto()[i], 1);
+//				nonTrovato = false;
+//	        }
+//			i++;
+//		}
+//	}
+//	
+//	private void dettagli(ActionEvent event) throws SQLException {
+//		int i=0;
+//		boolean nonTrovato = true;
+//		while (nonTrovato){
+//			if (event.getSource() == HomePage.getDettagli()[i]){
+//				nonTrovato = false;
+//				homePage.getProdottoPage().setId(homePage.getIdprodotto()[i]);
+//				Disk disk = new Disk();
+//				ResultSet rs = disk.getInfo(homePage.getIdprodotto()[i]);
+//				homePage.getProdottoPage().getImmagine().setIcon(new ImageIcon(new ImageIcon(rs.getString(4)).getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH)));
+//				BigDecimal prezzo = rs.getBigDecimal(5);
+//				if(HomePage.getCatalogo().getCatalogoScontato(homePage.getCliente().getNomeUtente()))
+//					prezzo = prezzo.multiply(new BigDecimal(0.8));
+//				homePage.getProdottoPage().getInfo().setText("<HTML>&nbsp;<B>TITOLO:</B> " + rs.getString(2)
+//						+ "<BR>&nbsp;<B>TRACCE:</B> " + rs.getString(3)
+//						+ "<BR>&nbsp;<B>PREZZO:</B> " + prezzo.setScale(2, BigDecimal.ROUND_UP)
+//						+ "€<BR>&nbsp;<B>TITOLARE:</B> " + rs.getString(7)
+//						+ "<BR>&nbsp;<B>DESCRIZIONE:</B> " + rs.getString(8)
+//						+ "<BR>&nbsp;<B>GENERE:</B> " + rs.getString(9)
+//						+ "<BR>&nbsp;<B>TIPO:</B> " + rs.getString(10)
+//						+ "<BR>&nbsp;<B>MUSICISTI PARTECIPANTI:</B> " + rs.getString(11)
+//						+ "<BR>&nbsp;<B>STRUMENTI:</B> " + rs.getString(12));
+//				homePage.getProdottoPage().setVisible(true);
+//	        }
+//			i++;
+//		}
+//	}
+}

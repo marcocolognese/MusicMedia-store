@@ -1,0 +1,95 @@
+package Progetto_Colognese_Rossini;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.List;
+
+import javax.swing.*;
+
+public class AccediListener implements ActionListener {
+
+	private static Accedi accedi;
+	private static HomePage homePage;
+	public final String ACCEDI = "Accedi";
+
+	AccediListener(Accedi accedi, HomePage homePage) {
+		this.accedi = accedi;
+		this.homePage = homePage;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String com = e.getActionCommand();
+		switch (com) {
+		case ACCEDI:
+			try {
+				accedi();
+			} catch (SQLException e1) {
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void accedi() throws SQLException {
+		Catalogo catalogo = new Catalogo();
+			if (HomePage.getCliente().logIn(Accedi.getNomeutentetext().getText(), Accedi.getPasswordtext().getText()) == false)
+				JOptionPane.showMessageDialog(null, "Credenziali non corrette", "Attenzione!", JOptionPane.ERROR_MESSAGE, new ImageIcon(""));
+			else if (HomePage.getCliente().logIn(Accedi.getNomeutentetext().getText(), Accedi.getPasswordtext().getText()) == true){
+				HomePage.getCarrellobutton().setEnabled(true);
+				HomePage.getCiaolabel().setText("  Ciao, " + HomePage.getCliente().getNomeUtente() + "!");
+				homePage.getProdottoPage().getAggiungibutton().setEnabled(true);
+				homePage.getProdottoPage().getQuantitaspinner().setEnabled(false);
+				
+				int i=0;
+				HomePage.getSinistra().removeAll();
+				HomePage.getCentro().removeAll();
+				HomePage.getDestra().removeAll();
+				List<ResultSet> resultSet = catalogo.getCatalogoPersonale(HomePage.getCliente().getNomeUtente());
+				for(ResultSet rs : resultSet){
+					i=0;
+				while (rs.next()){
+					HomePage.getDestra1()[i] = new JPanel(new GridBagLayout());
+					HomePage.getImmagine()[i] = new JLabel();
+					HomePage.getImmagine()[i].setIcon(new ImageIcon(new ImageIcon(rs.getString(5)).getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH)));
+					BigDecimal prezzo = rs.getBigDecimal(3);
+					if(catalogo.getCatalogoScontato(homePage.getCliente().getNomeUtente()))
+						prezzo = prezzo.multiply(new BigDecimal(0.8));
+					HomePage.getInfo()[i] = new JLabel("<HTML>&nbsp;TITOLO: " + rs.getString(2) + "<BR>&nbsp;ARTISTA: " + rs.getString(4) + "<BR>&nbsp;PREZZO: " + prezzo.setScale(2, BigDecimal.ROUND_UP) + "€</HTML>");
+					HomePage.getAggiungi()[i] = new JButton("Aggiungi al carrello");
+					HomePage.getDettagli()[i] = new JButton("Dettagli del prodotto");
+					HomePage.getDestra1()[i].removeAll();
+					HomePage.getSinistra().add(HomePage.getImmagine()[i], BorderLayout.WEST);
+					HomePage.getCentro().add(HomePage.getInfo()[i], BorderLayout.CENTER);
+					HomePage.getAggiungi()[i].setEnabled(true);
+					HomePage.getDestra1()[i].add(HomePage.getAggiungi()[i]);
+					HomePage.getDestra1()[i].add(HomePage.getDettagli()[i]);
+					HomePage.getDestra().add(HomePage.getDestra1()[i], BorderLayout.EAST);
+					
+					HomePage.getDettagli()[i].addActionListener(homePage.getHomePageListener());
+					HomePage.getDettagli()[i].setActionCommand(homePage.getHomePageListener().DETTAGLI);
+					HomePage.getAggiungi()[i].addActionListener(homePage.getHomePageListener());
+					HomePage.getAggiungi()[i].setActionCommand(homePage.getHomePageListener().AGGIUNGI);
+					i++;
+				}
+				}
+				HomePage.getSinistra().setLayout(new GridLayout(i, 1));
+				HomePage.getCentro().setLayout(new GridLayout(i, 1));
+				HomePage.getDestra().setLayout(new GridLayout(i, 1));
+				HomePage.getLogpanel1().remove(HomePage.getAccedibutton());
+				HomePage.getLogpanel1().remove(HomePage.getRegistratibutton());
+				HomePage.getLogpanel1().add(HomePage.getEscibutton());
+				accedi.dispose();
+//				homePage.pack();
+				homePage.setSize(HomePage.getLarghezza(), HomePage.getAltezza());
+				homePage.setLocationRelativeTo(null);
+				HomePage.setCarrello(new Carrello(Accedi.getNomeutentetext().getText()));
+			}
+			else {
+				new GestioneNegozio();
+				accedi.dispose();
+			}
+	}
+}
